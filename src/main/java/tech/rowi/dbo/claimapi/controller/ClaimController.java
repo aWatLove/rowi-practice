@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tech.rowi.dbo.claimapi.dto.reference.*;
 import tech.rowi.dbo.claimapi.dto.request.*;
@@ -68,48 +69,56 @@ public class ClaimController {
 
     // 4
     // creating
+    @PreAuthorize("hasRole('VERIFICATOR')")
     @PostMapping(produces = "application/json")
     public ResponseEntity<?> createClaim(@Valid @RequestBody ClaimPostRequest request){
         return ResponseEntity.ok(claimService.createClaim(request));
     }
 
     // editing
+    @PreAuthorize("hasAnyRole('VERIFICATOR', 'SUPPORT')")
     @PostMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<?> editClaim(@Valid @RequestBody ClaimPostRequest request, @PathVariable Long id) throws FileNotFoundException {
         return ResponseEntity.ok(claimService.editClaim(request, id));
     }
 
     // 5
+    @PreAuthorize("hasRole('VERIFICATOR')")
     @PatchMapping(value = "/{id}/update", produces = "application/json")
     public ResponseEntity<?> patchClaim(@Valid @RequestBody ClaimUpdateRequest claimUpdateRequest, @PathVariable Long id) throws FileNotFoundException {
         return ResponseEntity.ok(claimService.updateClaim(claimUpdateRequest, id));
     }
 
     // 6
+    @PreAuthorize("hasRole('VERIFICATOR')")
     @PatchMapping(value = "/{id}/assign", produces = "application/json")
     public ResponseEntity<?> assignClaim(@PathVariable Long id) throws FileNotFoundException {
         return ResponseEntity.ok(claimService.assignClaim(id));
     }
 
     // 7.1
+    @PreAuthorize("hasRole('VERIFICATOR')")
     @PatchMapping(value = "/{id}/reassign", produces = "application/json")
     public ResponseEntity<?> reassignClaim(@Valid @RequestBody ClaimReassignRequest claimReassignRequest, @PathVariable Long id) throws FileNotFoundException {
         return ResponseEntity.ok(claimService.reassignClaim(claimReassignRequest, id));
     }
 
     // 7.2
+    @PreAuthorize("hasRole('VERIFICATOR')")
     @PatchMapping(value = "/{id}/forward", produces = "application/json")
     public ResponseEntity<?> forwardClaim(@Valid @RequestBody ClaimForwardRequest claimForwardRequest, @PathVariable Long id) throws FileNotFoundException {
         return ResponseEntity.ok(claimService.forwardClaim(claimForwardRequest, id));
     }
 
     // 8
+    @PreAuthorize("hasRole('VERIFICATOR')")
     @PatchMapping(value = "/{id}/close", produces = "application/json")
     public ResponseEntity<?> closeClaim(@Valid @RequestBody ClaimCloseRequest claimCloseRequest, @PathVariable Long id) throws FileNotFoundException {
         return ResponseEntity.ok(claimService.closeClaim(claimCloseRequest, id));
     }
 
     // 9
+    @PreAuthorize("hasRole('VERIFICATOR')")
     @PatchMapping(value = "/{id}/pause", produces = "application/json")
     public ResponseEntity<?> takeClaim(@RequestBody ClaimPauseRequest claimPauseRequest, @PathVariable Long id) throws FileNotFoundException {
         return ResponseEntity.ok(claimService.pauseClaim(claimPauseRequest, id));
